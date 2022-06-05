@@ -20,7 +20,7 @@ class MgDatapoint:
         ht = [1 if [i+1] in [*self.categorical_inputs.values()] else 0 for i in range(6)]
         
         
-        if sum([*self.range_based_inputs.values()]) != 100:
+        if sum([*self.range_based_inputs.values()]) != 100.0:
             self.mg_balance = False
             
 
@@ -145,14 +145,14 @@ class optimiser:
             if not best_datapoint.mg_balance:
                 print('\033[1m'+'\033[91m'+ "Mg content has been balanced to "+ str(final_alloy['Mg']) + " %" +'\033[0m')
             
-            print('Chemical composition: ')
+            print('\n', 'Chemical composition: ')
             for index, key in enumerate(final_alloy):
                 print(key+ ":" + str(final_alloy[key]), end="  ")
                 if (index+1)%10 ==0:
                     print("")
                   
                 
-            print('\nPredicted %f Elongation' % (self.models['elongation'].predict(best_datapoint.formatForInput())[0]))
+            print('\n', 'Predicted %f Elongation' % (self.models['elongation'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Yield Strength' % (self.models['yield'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Tensile Strength' % (self.models['tensile'].predict(best_datapoint.formatForInput())[0]))
 
