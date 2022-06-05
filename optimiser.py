@@ -145,14 +145,16 @@ class optimiser:
             if not best_datapoint.mg_balance:
                 print('\033[1m'+'\033[91m'+ "Mg content has been balanced to "+ str(final_alloy['Mg']) + " %" +'\033[0m')
             
-            print('\n', 'Chemical composition: ')
+            print('\n')
+            print('Chemical composition: ')
             for index, key in enumerate(final_alloy):
                 print(key+ ":" + str(final_alloy[key]), end="  ")
                 if (index+1)%10 ==0:
                     print("")
                   
                 
-            print('\n', 'Predicted %f Elongation' % (self.models['elongation'].predict(best_datapoint.formatForInput())[0]))
+            print('\n')
+            print('Predicted %f Elongation' % (self.models['elongation'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Yield Strength' % (self.models['yield'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Tensile Strength' % (self.models['tensile'].predict(best_datapoint.formatForInput())[0]))
 
