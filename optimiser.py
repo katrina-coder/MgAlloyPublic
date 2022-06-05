@@ -134,7 +134,7 @@ class optimiser:
                 ['Mg', 'Nd', 'Ce', 'La', 'Zn', 'Sn', 'Al', 'Ca', 'Zr', 'Ag', 'Ho', 'Mn',
                  'Y', 'Gd', 'Cu', 'Si', 'Li', 'Yb', 'Th', 'Sb', 'Pr', 'Ga', 'Be', 'Fe',
                  'Ni', 'Sc', 'Tb', 'Dy', 'Er', 'Sr', 'Bi', 'Extruded', 'ECAP', 'Cast_Slow', 'Cast_Fast', 'Cast_HT', 'Wrought'],
-                best_datapoint.formatForInput().reshape(-1,))
+                best_datapoint.formatForInput().reshape(-1,)))
             
             print(' Chemical composition: ', final_alloy)
             print('Predicted %f Elongation' % (self.models['elongation'].predict(best_datapoint.formatForInput())[0]))
