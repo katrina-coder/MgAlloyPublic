@@ -138,8 +138,8 @@ class optimiser:
             
             print('Chemical composition: ')
             for index, key in enumerate(final_alloy):
-                print(key+ ":" + str(final_alloy[key]), end=",")
-                if (index+1)%5 ==0:
+                print(key+ ":" + str(final_alloy[key]), end="  ")
+                if (index+1)%10 ==0:
                     print("\n")
                   
                 
