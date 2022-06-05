@@ -140,10 +140,10 @@ class optimiser:
             for index, key in enumerate(final_alloy):
                 print(key+ ":" + str(final_alloy[key]), end="  ")
                 if (index+1)%10 ==0:
-                    print("\n")
+                    print("")
                   
                 
-            print('Predicted %f Elongation' % (self.models['elongation'].predict(best_datapoint.formatForInput())[0]))
+            print('\nPredicted %f Elongation' % (self.models['elongation'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Yield Strength' % (self.models['yield'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Tensile Strength' % (self.models['tensile'].predict(best_datapoint.formatForInput())[0]))
 
