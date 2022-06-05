@@ -14,9 +14,15 @@ class MgDatapoint:
         self.categorical_inputs = settings.categorical_inputs
         self.categorical_inputs_info = settings.categorical_inputs_info
         self.range_based_inputs = settings.range_based_inputs
+        self.mg_balance = True
 
     def formatForInput(self):
         ht = [1 if [i+1] in [*self.categorical_inputs.values()] else 0 for i in range(6)]
+        
+        
+        if sum([*self.range_based_inputs.values()]) != 100:
+            self.mg_balance = False
+            
 
         my_input = [100 - sum([*self.range_based_inputs.values()][1:])] + [*self.range_based_inputs.values()][1:] + ht  
                    # [*self.range_based_inputs.values()] 
@@ -135,6 +141,9 @@ class optimiser:
                  'Y', 'Gd', 'Cu', 'Si', 'Li', 'Yb', 'Th', 'Sb', 'Pr', 'Ga', 'Be', 'Fe',
                  'Ni', 'Sc', 'Tb', 'Dy', 'Er', 'Sr', 'Bi', 'Extruded', 'ECAP', 'Cast_Slow', 'Cast_Fast', 'Cast_HT', 'Wrought'],
                 best_datapoint.formatForInput().reshape(-1,)))
+            
+            if not best_datapoint.mg_balance:
+                print('\033[1m'+ "Mg content has been balanced to "+ str(final_alloy['Mg']) + " %" )
             
             print('Chemical composition: ')
             for index, key in enumerate(final_alloy):
