@@ -136,7 +136,13 @@ class optimiser:
                  'Ni', 'Sc', 'Tb', 'Dy', 'Er', 'Sr', 'Bi', 'Extruded', 'ECAP', 'Cast_Slow', 'Cast_Fast', 'Cast_HT', 'Wrought'],
                 best_datapoint.formatForInput().reshape(-1,)))
             
-            print(' Chemical composition: ', final_alloy)
+            print('Chemical composition: ')
+            for index, key in enumerate(final_alloy):
+                print(key+ ":" + str(final_alloy[key]), end=",")
+                if (index+1)%5 ==0:
+                    print("\n")
+                  
+                
             print('Predicted %f Elongation' % (self.models['elongation'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Yield Strength' % (self.models['yield'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Tensile Strength' % (self.models['tensile'].predict(best_datapoint.formatForInput())[0]))
