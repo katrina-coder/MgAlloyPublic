@@ -130,6 +130,13 @@ class optimiser:
             print('predicted %f Yield Strength' % (1.25*self.models['yield'].predict(best_datapoint.formatForInput())[0]))
             #print('predicted %f Tensile Strength' % (1.25*self.models['tensile'].predict(best_datapoint.formatForInput())[0]))
         elif self.mode == 'Mechanical':
+            final_alloy  = dict(zip(
+                ['Mg', 'Nd', 'Ce', 'La', 'Zn', 'Sn', 'Al', 'Ca', 'Zr', 'Ag', 'Ho', 'Mn',
+                 'Y', 'Gd', 'Cu', 'Si', 'Li', 'Yb', 'Th', 'Sb', 'Pr', 'Ga', 'Be', 'Fe',
+                 'Ni', 'Sc', 'Tb', 'Dy', 'Er', 'Sr', 'Bi'],
+                [best_datapoint.formatForInput()]))
+            
+            print(' Chemical composition: ', final_alloy)
             print('Predicted %f Elongation' % (self.models['elongation'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Yield Strength' % (self.models['yield'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Tensile Strength' % (self.models['tensile'].predict(best_datapoint.formatForInput())[0]))
