@@ -143,7 +143,7 @@ class optimiser:
                 best_datapoint.formatForInput().reshape(-1,)))
             
             if not best_datapoint.mg_balance:
-                print('\033[1m'+ "Mg content has been balanced to "+ str(final_alloy['Mg']) + " %" )
+                print('\033[1m'+'\033[91m'+ "Mg content has been balanced to "+ str(final_alloy['Mg']) + " %" +'\033[0m')
             
             print('Chemical composition: ')
             for index, key in enumerate(final_alloy):
