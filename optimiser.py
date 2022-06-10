@@ -17,9 +17,9 @@ class MgDatapoint:
         self.mg_balance = True
 
     def formatForInput(self):
-        ht = [1 if [i+1] in [*self.categorical_inputs.values()] else 0 for i in range(6)]
-        
-        
+        #ht = [1 if [i+1] in [*self.categorical_inputs.values()] else 0 for i in range(6)]
+        for key in self.categorical_inputs:
+            ht = self.categorical_inputs[key]
         if sum([*self.range_based_inputs.values()]) != 100.0:
             self.mg_balance = False
             
@@ -99,7 +99,7 @@ class scanSettings:
                     [0] , [0] , [0] , [0] , [0], 
                     [0] , [0] , [0] , [0] , [0]]))
         
-            self.range_based_inputs['Mg'] = [100 - sum(sum(row) for row in list(self.range_based_inputs.values())[1:-1])]
+            self.range_based_inputs['Mg'] = [100 - sum(sum(row) for row in list(self.range_based_inputs.values())[1:])]
             
         
         
@@ -143,9 +143,10 @@ class optimiser:
                 best_datapoint.formatForInput().reshape(-1,)))
             
             if not best_datapoint.mg_balance:
+                print()
                 print('\033[1m'+'\033[91m'+ "Mg content has been balanced to "+ str(final_alloy['Mg']) + " %" +'\033[0m')
             
-            print('\n')
+            print()
             print('Chemical composition: ')
             for index, key in enumerate(final_alloy):
                 print(key+ ":" + str(final_alloy[key]), end="  ")
@@ -157,49 +158,55 @@ class optimiser:
             print('Predicted %f Elongation' % (self.models['elongation'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Yield Strength' % (self.models['yield'].predict(best_datapoint.formatForInput())[0]))
             print('Predicted %f Tensile Strength' % (self.models['tensile'].predict(best_datapoint.formatForInput())[0]))
+            print()
+            print('=============================================')
+            print()
 
     def run(self):
         best_loss = None
         best_datapoint = MgDatapoint(self.settings)
-        for i in range(self.max_steps):
-            loss, datapoint = self.calculateStep(best_datapoint, i, 'all')
-            if best_loss is None or loss < best_loss:
-                best_datapoint = datapoint
-                best_loss = loss
+        for key in self.range_based_inputs.keys():
+            best_datapoint.range_based_inputs[key] = min(self.range_based_inputs[key])
+        
+        #for i in range(self.max_steps):
+          #  loss, datapoint = self.calculateStep(best_datapoint, i, 'all')
+           # if best_loss is None or loss < best_loss:
+            #    best_datapoint = datapoint
+             #   best_loss = loss
 
-        for i in range(self.finetune_max_rounds):
-            for key in [*self.categorical_inputs.keys(), *self.range_based_inputs.keys()]:
-                loss, datapoint = self.calculateStep(best_datapoint, i, key)
-                if loss < best_loss:
-                    best_datapoint = datapoint
-                    best_loss = loss
-            else:
-                break
-        print('==========Scan Finished==========')
+       # for i in range(self.finetune_max_rounds):
+          #  for key in [*self.categorical_inputs.keys(), *self.range_based_inputs.keys()]:
+             #   loss, datapoint = self.calculateStep(best_datapoint, i, key)
+              #  if loss < best_loss:
+               #     best_datapoint = datapoint
+                #    best_loss = loss
+          #  else:
+           #     break
+        print('=============== Scan Finished ===============')
         self.printResults(best_datapoint)
 
-    def calculateStep(self, best_datapoint, step_number, target_var):
-        if target_var == 'all':
-            batch_size = self.step_batch_size
-        else:
-            batch_size = self.finetune_batch_size
-        loss = [0] * batch_size
-        datapoints = []
-        std = self.step_final_std * (self.max_steps / float(step_number + 1))
-        for i in range(batch_size):
-            datapoints.append(deepcopy(best_datapoint))
-            for key in self.categorical_inputs.keys():
-                if target_var == key or target_var == 'all':
-                    datapoints[i].categorical_inputs[key] = np.random.choice(self.categorical_inputs[key])
-            for key in self.range_based_inputs.keys():
-                if target_var == key or target_var == 'all':
-                    if max(self.range_based_inputs[key]) != min(self.range_based_inputs[key]):
-                        a = (min(self.range_based_inputs[key]) - np.mean(best_datapoint.range_based_inputs[key])) / std
-                        b = (max(self.range_based_inputs[key]) - np.mean(best_datapoint.range_based_inputs[key])) / std
-                        datapoints[i].range_based_inputs[key] = round(
-                            float(truncnorm.rvs(a, b, loc=np.mean(best_datapoint.range_based_inputs[key]), scale=std)),
-                            2)
-                    else:
-                        datapoints[i].range_based_inputs[key] = min(self.range_based_inputs[key])
-            loss[i] = self.calculateLoss(datapoints[i])
-        return min(loss), datapoints[loss.index(min(loss))]
+#     def calculateStep(self, best_datapoint, step_number, target_var):
+#         if target_var == 'all':
+#             batch_size = self.step_batch_size
+#         else:
+#             batch_size = self.finetune_batch_size
+#         loss = [0] * batch_size
+#         datapoints = []
+#         std = self.step_final_std * (self.max_steps / float(step_number + 1))
+#         for i in range(batch_size):
+#             datapoints.append(deepcopy(best_datapoint))
+#             for key in self.categorical_inputs.keys():
+#                 if target_var == key or target_var == 'all':
+#                     datapoints[i].categorical_inputs[key] = np.random.choice(self.categorical_inputs[key])
+#             for key in self.range_based_inputs.keys():
+#                 if target_var == key or target_var == 'all':
+#                     if max(self.range_based_inputs[key]) != min(self.range_based_inputs[key]):
+#                         a = (min(self.range_based_inputs[key]) - np.mean(best_datapoint.range_based_inputs[key])) / std
+#                         b = (max(self.range_based_inputs[key]) - np.mean(best_datapoint.range_based_inputs[key])) / std
+#                         datapoints[i].range_based_inputs[key] = round(
+#                             float(truncnorm.rvs(a, b, loc=np.mean(best_datapoint.range_based_inputs[key]), scale=std)),
+#                             2)
+#                     else:
+#                         datapoints[i].range_based_inputs[key] = min(self.range_based_inputs[key])
+#             loss[i] = self.calculateLoss(datapoints[i])
+#         return min(loss), datapoints[loss.index(min(loss))]
