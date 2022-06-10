@@ -15,9 +15,11 @@ def extractSettingsFromGUI(GUI_inputs, mode):
 
     for key in settings.categorical_inputs:
         settings.categorical_inputs[key] = []
-        for index, value in enumerate(settings.categorical_inputs_info[key]['span']):
-            if GUI_inputs['categorical_inputs'][key][index].value:
-                settings.categorical_inputs[key].append(settings.categorical_inputs_info[key]['span'][index])
+        for index, value in enumerate(settings.categorical_inputs_info[key]['tag']):
+            if GUI_inputs['categorical_inputs'][key][0].value==value:
+                settings.categorical_inputs[key].append(1)
+            else:
+                settings.categorical_inputs[key].append(0)
 
     return settings
 
@@ -64,14 +66,18 @@ def generateMainGUI(mode):
     for key in settings.categorical_inputs:
         categorical_inputs_VBox.append(widgets.HTML(f'{key}:'))
         GUI_inputs["categorical_inputs"][key] = []
-        for i, value in enumerate(settings.categorical_inputs_info[key]['span']):
-            value_checkbox = widgets.Checkbox(description=settings.categorical_inputs_info[key]['tag'][i],
+        options = []
+        for i, value in enumerate(settings.categorical_inputs_info[key]['tag']):
+            options.append(value)
+        value_checkbox = widgets.RadioButtons(options=options,
+                                             description = '',
                                               disabled=False,
                                               indent=False)
-            if value in settings.categorical_inputs[key]:
-                value_checkbox.value = True
-            categorical_inputs_VBox.append(value_checkbox)
-            GUI_inputs["categorical_inputs"][key].append(value_checkbox)
+        
+#             if value in settings.categorical_inputs[key]:
+#                 value_checkbox.value = True
+        categorical_inputs_VBox.append(value_checkbox)
+        GUI_inputs["categorical_inputs"][key].append(value_checkbox)
 
         
 
@@ -84,6 +90,7 @@ def generateMainGUI(mode):
     display(run_scan_button)
 
     def on_button_clicked(b):
+        print()
         print('start running model ....')
         optimiser(extractSettingsFromGUI(GUI_inputs, mode))
 
