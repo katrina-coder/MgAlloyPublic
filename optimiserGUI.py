@@ -55,14 +55,14 @@ def generateMainGUI(mode):
                   "categorical_inputs": {}
                   }
 
-    range_based_inputs_VBox = [widgets.HTML("<b>Range-based Inputs (wt. %)    </b>")]
+    range_based_inputs_VBox = [widgets.HTML("<b>Compositional range (wt. %)    </b>")]
     for key in settings.range_based_inputs:
         key_label = widgets.Label(f"{key}:", layout=Layout(width=KEY_LABEL_WIDTH))
         lower_bound_box = widgets.FloatText(value=settings.range_based_inputs[key][0], layout=default_input_box_layout)
         range_based_inputs_VBox.append(HBox([key_label, lower_bound_box]))
         GUI_inputs["range_based_inputs"][key] = [lower_bound_box]
 
-    categorical_inputs_VBox = [widgets.HTML("<b>Categorical Inputs</b>")]
+    categorical_inputs_VBox = [widgets.HTML("<b>Thermomechanical process</b>")]
     for key in settings.categorical_inputs:
         categorical_inputs_VBox.append(widgets.HTML(f'{key}:'))
         GUI_inputs["categorical_inputs"][key] = []
