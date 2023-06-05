@@ -61,14 +61,15 @@ def generateMainGUI(mode):
         lower_bound_box = widgets.FloatText(value=settings.range_based_inputs[key][0], layout=default_input_box_layout)
         range_based_inputs_VBox.append(HBox([key_label, lower_bound_box]))
         GUI_inputs["range_based_inputs"][key] = [lower_bound_box]
-
+    
+    ht_names = ['Extruded', 'ECAP', 'Cast (slow cool)', 'Cast (fast cool)', 'Cast and Heat-treated',  'Wrought']
     categorical_inputs_VBox = [widgets.HTML("<b>Thermomechanical process</b>")]
     for key in settings.categorical_inputs:
         categorical_inputs_VBox.append(widgets.HTML(f'{key}:'))
         GUI_inputs["categorical_inputs"][key] = []
         options = []
         for i, value in enumerate(settings.categorical_inputs_info[key]['tag']):
-            options.append(value)
+            options.append(ht_names[i])
         value_checkbox = widgets.RadioButtons(options=options,
                                              description = '',
                                               disabled=False,
