@@ -39,6 +39,7 @@ def generateModeSelectionGUI(mode = 'Mechanical'):
             generateModeSelectionGUI(change['new'])
     mode_dropdown.observe(on_change)
 
+    
 def generateMainGUI(mode):
     settings = scanSettings(mode)
     KEY_LABEL_WIDTH = "30px"
